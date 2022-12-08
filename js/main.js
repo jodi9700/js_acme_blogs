@@ -3,7 +3,7 @@
 // Jodi Bills
 
 
-// createElemWithText:
+// 1. createElemWithText:
 // Receives up to 3 parameters
 // 1st parameter is the HTML element string name to be created (h1, p, button, etc)
 // Set a default value for the 1st parameter to “p”
@@ -24,7 +24,7 @@ const createElemWithText = (tagName = "p", content = "", name) => {
 }
 
 
-// createSelectOptions:
+// 2. createSelectOptions:
 // Receives users JSON data as a parameter
 const createSelectOptions = (jsonData) => {
 
@@ -38,7 +38,7 @@ const createSelectOptions = (jsonData) => {
     jsonData.forEach(user => {
 
         // Creates an option element for each user with document.createElement()
-        const option = document.createElement("option");
+        const option = document.createElement('option');
 
         // Assigns the user.id to the option.value
         option.value = user.id;
@@ -54,7 +54,7 @@ const createSelectOptions = (jsonData) => {
 }
 
 
-// toggleCommentSection:
+// 3. toggleCommentSection:
 // Receives a postId as the parameter
 const toggleCommentSection = (postId) => {
 
@@ -79,7 +79,7 @@ const toggleCommentSection = (postId) => {
 }
 
 
-// toggleCommentButton:
+// 4. toggleCommentButton:
 // Receives a postId as the parameter
 const toggleCommentButton = (postId) => {
 
@@ -106,7 +106,7 @@ const toggleCommentButton = (postId) => {
 }
 
 
-// deleteChildElements:
+// 5. deleteChildElements:
 // Receives a parentElement as a parameter
 const deleteChildElements = (parentElement) => {
 
@@ -131,7 +131,7 @@ const deleteChildElements = (parentElement) => {
 }
 
 
-// addButtonListeners:
+// 6. addButtonListeners:
 const addButtonListeners = () => {
 
     // Selects all buttons nested inside the main element
@@ -141,7 +141,7 @@ const addButtonListeners = () => {
     if (buttons) {
 
         // Loop through the NodeList of buttons
-        for (const button of buttons) {
+        buttons.forEach(button => {
 
             // Gets the postId from button.dataset.postId
             let postId = button.dataset.postId;
@@ -154,7 +154,7 @@ const addButtonListeners = () => {
                 //      event and postId as parameters
                 toggleComments(event, postId);
             })
-        }
+        })
 
         // Return the button elements which were selected
         return buttons;       
@@ -164,7 +164,7 @@ const addButtonListeners = () => {
 }
 
 
-// removeButtonListeners:
+// 7. removeButtonListeners:
 const removeButtonListeners = () => {
 
     // Selects all buttons nested inside the main element
@@ -174,7 +174,7 @@ const removeButtonListeners = () => {
     if (buttons) {
 
         // Loop through the NodeList of buttons
-        for (const button of buttons) {
+        buttons.forEach(button => {
 
             // Gets the postId from button.dataset.postId
             let postId = button.dataset.postId;
@@ -187,7 +187,7 @@ const removeButtonListeners = () => {
                 //      event and postId as parameters
                 toggleComments(event, postId);
             })
-        }
+        })
 
         // Return the button elements which were selected
         return buttons;       
@@ -197,7 +197,7 @@ const removeButtonListeners = () => {
 }
 
 
-// createComments:
+// 8. createComments:
 // Depends on the createElemWithText function we created
 // Receives JSON comments data as a parameter
 const createComments = (jsonCommentsData) => {
@@ -236,75 +236,165 @@ const createComments = (jsonCommentsData) => {
 }
 
 
-// populateSelectMenu:
+// 9. populateSelectMenu:
 // Depends on the createSelectOptions function we created
 // Receives the users JSON data as a parameter
-// Selects the #selectMenu element by id
-// Passes the users JSON data to createSelectOptions()
-// Receives an array of option elements from createSelectOptions
-// Loops through the options elements and appends each option element to the
-//      select menu
-// Return the selectMenu element
+const populateSelectMenu = (jsonUsersData) => {
+
+    // Returns undefined if not passed a parameter
+    if (!jsonUsersData) return;
+
+    // Selects the #selectMenu element by id
+    let selectMenu = document.querySelector('#selectMenu');
+
+    // Passes the users JSON data to createSelectOptions()
+    // Receives an array of option elements from createSelectOptions
+    const optionElements = createSelectOptions(jsonUsersData);
+
+    // Loops through the options elements and appends each option element to the
+    //      select menu
+    optionElements.forEach(option => {
+        selectMenu.append(option);
+    })
+
+    // Return the selectMenu element
+    return selectMenu;
+}
 
 
-// getUsers
-// Fetches users data from: https://jsonplaceholder.typicode.com/ (look at
-//      Resources section)
+// 10. getUsers:
+// Fetches users data from: https://jsonplaceholder.typicode.com/
 // Should be an async function
-// Should utilize a try / catch block
-// Uses the fetch API to request all users
-// Await the users data response
-// Return the JSON data
+const getUsers = async () => {
+
+    // Should utilize a try / catch block
+    try {
+
+        // Uses the fetch API to request all users
+        // Await the users data response
+        const res = await fetch('https://jsonplaceholder.typicode.com/users');
+        if (!res.ok) throw new Error("Status code not in 200-299 range.");
+
+        // Return the JSON data
+        return await res.json();
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 
 
-// getUserPosts
+// 11. getUserPosts:
 // Receives a user id as a parameter
-// Fetches post data for a specific user id from:
-//      https://jsonplaceholder.typicode.com/ (look at Routes section)
+// Fetches post data for a specific user id from: https://jsonplaceholder.typicode.com/
 // Should be an async function
-// Should utilize a try / catch block
-// Uses the fetch API to request all posts for a specific user id
-// Await the users data response
-// Return the JSON data
+const getUserPosts = async (userId) => {
+
+    // Returns undefined if not passed a parameter
+    if (!userId) return;
+
+    // Should utilize a try / catch block
+    try {
+
+        // Uses the fetch API to request all posts for a specific user id
+        // Await the users data response
+        const res = await fetch('https://jsonplaceholder.typicode.com/posts?userId=${userId}');
+        if (!res.ok) throw new Error("Status code not in 200-299 range.");
+
+        // Return the JSON data
+        return await res.json();
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 
 
-// getUser
+// 12. getUser:
 // Receives a user id as a parameter
 // Fetches data for a specific user id from: https://jsonplaceholder.typicode.com/
-//      (look at Routes section)
 // Should be an async function
-// Should utilize a try / catch block
-// Uses the fetch API to request a specific user id
-// Await the user data response
-// Return the JSON data
+const getUser = async (userId) => {
+
+    // Returns undefined if not passed a parameter
+    if (!userId) return;
+
+    // Should utilize a try / catch block
+    try {
+
+        // Uses the fetch API to request a specific user id
+        // Await the user data response
+        const res = await fetch('https://jsonplaceholder.typicode.com/users/${userId}');
+        if (!res.ok) throw new Error("Status code not in 200-299 range.");
+
+        // Return the JSON data
+        return await res.json();
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 
 
-// getPostComments
+// 13. getPostComments:
 // Receives a post id as a parameter
-// Fetches comments for a specific post id from:
-//      https://jsonplaceholder.typicode.com/ (look at Routes section)
+// Fetches comments for a specific post id from: https://jsonplaceholder.typicode.com/
 // Should be an async function
-// Should utilize a try / catch block
-// Uses the fetch API to request all comments for a specific post id
-// Await the users data response
-// Return the JSON data
+const getPostComments = async (postId) => {
+
+    // Returns undefined if not passed a parameter
+    if (!postId) return;
+
+    // Should utilize a try / catch block
+    try {
+
+    // Uses the fetch API to request all comments for a specific post id
+    // Await the users data response
+    const res = await fetch('https://jsonplaceholder.typicode.com/posts/${postId}');
+    if (!res.ok) throw new Error("Status code not in 200-299 range.");
+
+    // Return the JSON data
+    return await res.json();
+    }
+    catch(e) {
+        console.log(e);
+    }
+}
 
 
-// displayComments
+// 14. displayComments:
 // Dependencies: getPostComments, createComments
 // Is an async function
 // Receives a postId as a parameter
-// Creates a section element with document.createElement()
-// Sets an attribute on the section element with section.dataset.postId
-// Adds the classes 'comments' and 'hide' to the section element
-// Creates a variable comments equal to the result of await
-//      getPostComments(postId);
-// Creates a variable named fragment equal to createComments(comments)
-// Append the fragment to the section
-// Return the section element
+const displayComments = async (postId) => {
+
+    // Returns undefined if not passed a parameter
+    if (!postId) return;
+
+    // Creates a section element with document.createElement()
+    let section = document.createElement('section');
+
+    // Sets an attribute on the section element with section.dataset.postId
+    section.dataset.postId = postId;
+
+    // Adds the classes 'comments' and 'hide' to the section element
+    section.classList.add('comments', 'hide');
+
+    // Creates a variable comments equal to the result of await getPostComments(postId);
+    const comments = await getPostComments(postId);
+
+    // Creates a variable named fragment equal to createComments(comments)
+    const fragment = createComments(comments);
+
+    // Append the fragment to the section
+    section.append(fragment);
+
+    // Return the section element
+    return section;
+}
 
 
-// createPosts
+// 15. createPosts:
 // Dependencies: createElemWithText, getUser, displayComments
 // Is an async function
 // Receives posts JSON data as a parameter
@@ -328,9 +418,12 @@ const createComments = (jsonCommentsData) => {
 // Append the section element to the article element
 // After the loop completes, append the article element to the fragment
 // Return the fragment element
+const createPosts = await (jsonPostsData) {
+    
+}
 
 
-// displayPosts
+// 16. displayPosts:
 // Dependencies: createPosts, createElemWithText
 // Is an async function
 // Receives posts data as a parameter
@@ -344,7 +437,7 @@ const createComments = (jsonCommentsData) => {
 // Returns the element variable
 
 
-// toggleComments
+// 17. toggleComments:
 // Dependencies: toggleCommentSection, toggleCommentButton
 // Receives 2 parameters: (see addButtonListeners function description)
 //      The event from the click event listener is the 1st param
@@ -361,7 +454,7 @@ function toggleComments (event, postId) {
 }
 
 
-// refreshPosts
+// 18. refreshPosts:
 // Dependencies: removeButtonListeners, deleteChildElements, displayPosts,
 //      addButtonListeners
 // Is an async function
@@ -378,7 +471,7 @@ function toggleComments (event, postId) {
 //      fragment, addButtons]
 
 
-// selectMenuChangeEventHandler
+// 19. selectMenuChangeEventHandler:
 // Dependencies: getUserPosts, refreshPosts
 // Should be an async function
 // Automatically receives the event as a parameter (see cheatsheet)
@@ -393,7 +486,7 @@ function toggleComments (event, postId) {
 //      [userId, posts, refreshPostsArray]
 
 
-// initPage
+// 20. initPage:
 // Dependencies: getUsers, populateSelectMenu
 // Should be an async function
 // No parameters.
@@ -405,7 +498,7 @@ function toggleComments (event, postId) {
 //      result from populateSelectMenu: [users, select]
 
 
-// initApp
+// 21. initApp:
 // Dependencies: initPage, selectMenuChangeEventHandler
 // Call the initPage() function.
 // Select the #selectMenu element by id
