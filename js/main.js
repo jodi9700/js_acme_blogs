@@ -63,7 +63,7 @@ const toggleCommentSection = (postId) => {
 
     // Selects the section element with the data-post-id attribute equal to the postId
     //    received as a parameter
-    const section = document.querySelector(`[data-post-id='${postId}']`);
+    const section = document.querySelector(`section[data-post-id='${postId}']`);
     
     // Use code to verify the section exists before attempting to access the classList
     //      property
@@ -88,7 +88,7 @@ const toggleCommentButton = (postId) => {
 
     // Selects the button with the data-post-id attribute equal to the postId received as a
     //      parameter
-    const button = document.querySelector(`[data-post-id='${postId}']`);
+    const button = document.querySelector(`button[data-post-id='${postId}']`);
 
     if (button) {
 
@@ -510,6 +510,7 @@ const toggleComments = (event, postId) => {
 //      addButtonListeners
 // Is an async function
 // Receives posts JSON data as a parameter
+
 const refreshPosts = async (jsonData) => {
 
     // Returns undefined if not passed a parameter
